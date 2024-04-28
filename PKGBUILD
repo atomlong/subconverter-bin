@@ -4,11 +4,12 @@
 pkgname=subconverter-bin
 _pkgname=subconverter
 pkgver=0.9.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Utility to convert between various proxy subscription formats (Precompiled version)'
 arch=('x86_64' 'aarch64' 'armv7h')
 url="https://github.com/tindy2013/subconverter"
 license=('GPL-3.0-only')
+conflicts=("${_pkgname}")
 depends=('bash')
 install=subconverter.install
 
