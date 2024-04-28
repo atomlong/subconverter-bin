@@ -1,11 +1,12 @@
 [Unit]
-Description=Subconverter service
-After=network.target
+Description=subconverter service
+After=network-online.target
 
 [Service]
-User=root
 Type=simple
-ExecStart=/opt/subconverter/subconverter.sh
+User=subconverter
+WorkingDirectory=/opt/subconverter
+ExecStart=/opt/subconverter/subconverter
 Restart=on-failure
 RestartSec=10
 

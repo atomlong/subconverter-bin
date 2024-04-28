@@ -1,36 +1,37 @@
-# Maintainer:  Dimitris Kiziridis <ragouel at outlook dot com>
+# Maintainer: BryanLiang <liangrui.ch at gmail dot com>
+# Contributor:  Dimitris Kiziridis <ragouel at outlook dot com>
 
 pkgname=subconverter-bin
-pkgver=0.7.2
+_pkgname=subconverter
+pkgver=0.9.0
 pkgrel=1
-pkgdesc='Utility to convert between various proxy subscription formats'
-arch=('x86_64' 'armv7h' 'aarch64')
+pkgdesc='Utility to convert between various proxy subscription formats (Precompiled version)'
+arch=('x86_64' 'aarch64' 'armv7h')
 url="https://github.com/tindy2013/subconverter"
-license=('GPL3')
-provides=('subconverter')
+license=('GPL-3.0-only')
 depends=('bash')
-source=(subconverter.service)
-source_x86_64=("${pkgname}-${pkgver}.tar.gz::${url}/releases/download/v${pkgver}/subconverter_linux64.tar.gz")
-source_armv7h=("${pkgname}-${pkgver}.tar.gz::${url}/releases/download/v${pkgver}/subconverter_armv7.tar.gz")
-source_aarch64=("${pkgname}-${pkgver}.tar.gz::${url}/releases/download/v${pkgver}/subconverter_aarch64.tar.gz")
-sha256sums=('dddffe61ec8cb6160393c1ac422ec592e534da3c0ac88cc74ae668732fbc3e6e')
-sha256sums_x86_64=('06bbe9e50291a0f83a1618697f704a5c002ef5bba60627344b5cd0651c3dc3b3')
-sha256sums_armv7h=('a8fdef6b55f2f9460e2eb4ea977d5287f6d07cb98c9e49b35fd572f248136e5d')
-sha256sums_aarch64=('d1059e22187b0a7e2bf069d8a1b8c097c54750646530893ee0c5e096203798c1')
+install=subconverter.install
 
-prepare() {
-  cd "${srcdir}/subconverter"
-  echo "#!/usr/bin/env bash
-  /opt/subconverter/subconverter" > subconverter.sh
-  chmod 755 subconverter.sh
-}
+source_x86_64=("${_pkgname}-${pkgver}_linux64.tar.gz::${url}/releases/download/v${pkgver}/subconverter_linux64.tar.gz")
+source_aarch64=("${_pkgname}-${pkgver}_aarch64.tar.gz::${url}/releases/download/v${pkgver}/subconverter_aarch64.tar.gz")
+source_armv7h=("${_pkgname}-${pkgver}_armv7h.tar.gz::${url}/releases/download/v${pkgver}/subconverter_armv7.tar.gz")
+source=("${_pkgname}.service"
+        "${_pkgname}.sysusers"
+        "${_pkgname}.sh")
+
+sha256sums_x86_64=('884a6d1168267eba076fcdd5171215bacf98c17948ab526e4cbbdcad5f7a0217')
+sha256sums_aarch64=('0914688a0af211360271a4eef8a731f09852b47edf094d3758070b660544659e')
+sha256sums_armv7h=('fd1e6f41616be6948fd988b46c3de81ac7c70bf7470d9b029f9e163c86cdb50f')
+sha256sums=('453249c76ca32f5dbbb913e9026fe4e6132b250f59551ccf34442d579bcf7df4'
+            '5aeb6a6323aad298db570249db2a77ba4f951ac977194d17adadd5e103604bf5'
+            'c7b66bf3efd0b088d6ccd79ecd779fe2f693bffeb4b8e85d836150f478280202')
 
 package() {
-  mkdir -p "${pkgdir}/opt/subconverter"
-  cp -aR "${srcdir}"/subconverter/* "${pkgdir}/opt/subconverter"
-  mkdir -p "${pkgdir}/usr/bin"
-  ln -s /opt/subconverter/subconverter.sh "${pkgdir}/usr/bin/subconverter"
-  mkdir -p ${pkgdir}/usr/lib/systemd/system/
-  install -Dm644 "${srcdir}"/subconverter.service  ${pkgdir}/usr/lib/systemd/system/subconverter.service
+    install -dm 755 "${pkgdir}/opt/${_pkgname}"
+    cp -aR "${srcdir}/${_pkgname}"/* "${pkgdir}/opt/${_pkgname}"
+    install -Dm 755 "${srcdir}/${_pkgname}.sh"       "${pkgdir}/usr/bin/${_pkgname}"
+    install -Dm 644 "${srcdir}/${_pkgname}.service"  "${pkgdir}/usr/lib/systemd/system/${_pkgname}.service"
+    install -Dm 644 "${srcdir}/${_pkgname}.sysusers" "${pkgdir}/usr/lib/sysusers.d/${_pkgname}.conf"
 }
-# vim:set ts=2 sw=2 et:
+
+# vim:set ts=4 sw=4 et:
